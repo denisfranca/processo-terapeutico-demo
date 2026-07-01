@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Processo Terapêutico Pro · Denis França</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --az:#0a1628;--az2:#0f1e38;--az3:#152444;
+  --dou:#E8C55A;--dou2:#F5D875;--dou3:#B89830;--doup:#FBF5E6;
+  --br:#fff;--br2:rgba(255,255,255,.85);--br3:rgba(255,255,255,.55);--br4:rgba(255,255,255,.25);
+  --borda:rgba(255,255,255,.12);--verde:#5DD87A;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',system-ui,sans-serif;background:var(--az);color:var(--br);min-height:100vh;line-height:1.6;font-size:15px}
+.app{max-width:680px;margin:0 auto;padding:1.5rem 1rem 4rem}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#060d1e,var(--az2));border-radius:16px;padding:1.25rem 1.5rem;margin-bottom:20px;border:1px solid var(--dou3);position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;top:-50px;right:-50px;width:200px;height:200px;border-radius:50%;background:rgba(232,197,90,.04)}
+.hdr-row{display:flex;align-items:center;gap:16px;margin-bottom:10px}
+.hdr-logo{width:48px;height:48px;flex-shrink:0}
+.hdr-nome{font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,3vw,1.35rem);font-weight:400;color:var(--br)}
+.hdr-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(.85rem,2.5vw,1.1rem);font-weight:300;color:var(--dou2);font-style:italic}
+.hdr-linha{width:44px;height:1px;background:linear-gradient(90deg,transparent,var(--dou),transparent);margin:8px auto}
+.hdr-desc{text-align:center;font-size:10px;color:var(--br3);letter-spacing:1px}
+.btn-salvos{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.06);border:1px solid var(--borda);border-radius:8px;padding:6px 12px;font-size:10px;color:var(--br3);cursor:pointer;font-family:'Jost',sans-serif}
+
+/* TABS */
+.tabs{display:flex;border:1px solid var(--borda);border-radius:10px;overflow:hidden;margin-bottom:20px}
+.tab{flex:1;padding:9px 4px;text-align:center;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:2px;background:rgba(255,255,255,.03);color:var(--br3);border-right:1px solid var(--borda);transition:all .15s;cursor:default}
+.tab:last-child{border-right:none}
+.tab.active{background:rgba(232,197,90,.1);color:var(--dou);border-bottom:2px solid var(--dou)}
+.tab.done{color:var(--dou)}
+.tab.done::before{content:'✓ '}
+
+/* CARD */
+.card{background:rgba(255,255,255,.04);border:1px solid var(--borda);border-radius:12px;padding:1.25rem;margin-bottom:12px}
+.card-title{font-size:11px;font-weight:500;color:var(--dou);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+
+/* CAMPOS */
+label{display:block;font-size:12px;font-weight:500;color:var(--dou);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+input[type=text],textarea,select{width:100%;font-family:'Jost',sans-serif;font-size:15px;color:var(--br);background:rgba(255,255,255,.07);border:1px solid var(--borda);border-radius:8px;padding:10px 12px;outline:none;box-sizing:border-box;line-height:1.5;transition:border-color .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--dou);background:rgba(255,255,255,.09)}
+textarea{min-height:80px;resize:vertical;line-height:1.6}
+select{cursor:pointer}
+select option{background:var(--az2);color:var(--br)}
+input::placeholder,textarea::placeholder{color:rgba(255,255,255,.2)}
+.campo{margin-bottom:12px}
+
+/* TAGS */
+.tagbox{display:flex;flex-wrap:wrap;gap:6px;padding:8px;border:1px solid var(--borda);border-radius:8px;background:rgba(255,255,255,.05);min-height:48px;cursor:text;transition:border-color .15s}
+.tagbox:focus-within{border-color:var(--dou)}
+.tag{display:inline-flex;align-items:center;gap:4px;background:rgba(232,197,90,.15);color:var(--dou);font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px;border:1px solid var(--dou3)}
+.tag button{background:none;border:none;cursor:pointer;color:var(--dou);font-size:14px;padding:0;line-height:1;opacity:.7}
+.taginp{border:none;outline:none;background:transparent;font-family:'Jost',sans-serif;font-size:13px;color:var(--br);flex:1;min-width:100px}
+.hint{font-size:12px;color:var(--br4);margin:8px 0 10px}
+.presets{display:flex;flex-wrap:wrap;gap:5px}
+.preset{font-size:12px;padding:4px 10px;border-radius:20px;border:1px solid var(--borda);background:rgba(255,255,255,.05);color:var(--br3);cursor:pointer;font-family:'Jost',sans-serif;transition:all .12s}
+.preset:hover{border-color:var(--dou);color:var(--dou);background:rgba(232,197,90,.1)}
+
+/* FORMATO */
+.fmt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fmt{border:1.5px solid var(--borda);border-radius:10px;padding:14px;cursor:pointer;background:rgba(255,255,255,.04);transition:all .15s}
+.fmt.sel{border-color:var(--dou);border-width:2px;background:rgba(232,197,90,.1)}
+.fmt-icon{font-size:22px;margin-bottom:6px}
+.fmt h4{font-size:15px;font-weight:500;color:var(--br);margin:0 0 3px}
+.fmt p{font-size:13px;color:var(--br3);margin:0;line-height:1.4}
+
+/* BOTÕES */
+.brow{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--borda)}
+.btnm{background:linear-gradient(135deg,var(--dou3),var(--dou2));color:var(--az);border:none;border-radius:8px;padding:13px 24px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Jost',sans-serif;letter-spacing:.5px;transition:opacity .15s}
+.btnm:hover{opacity:.88}
+.btnm:disabled{opacity:.45;cursor:not-allowed}
+.btng{background:rgba(255,255,255,.06);color:var(--br3);border:1px solid var(--borda);border-radius:8px;padding:13px 18px;font-size:15px;cursor:pointer;font-family:'Jost',sans-serif;transition:opacity .15s}
+.btng:hover{opacity:.8}
+
+/* ERRO */
+.erro{background:rgba(229,115,115,.15);border:1px solid rgba(229,115,115,.5);border-radius:8px;padding:10px 14px;font-size:13px;color:#EF9A9A;margin-top:10px;line-height:1.6}
+
+/* LOADING */
+.loading{text-align:center;padding:3rem 0}
+.spinner{width:40px;height:40px;border:2px solid var(--borda);border-top-color:var(--dou);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes surgir{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.load-msg{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--dou);margin-bottom:4px}
+.load-sub{font-size:14px;color:var(--br3)}
+
+/* RESULTADO */
+.res-hero{background:linear-gradient(135deg,var(--az2),var(--az3));border-radius:16px;padding:1.5rem;margin-bottom:16px;border:1px solid var(--dou3);position:relative;overflow:hidden}
+.res-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(232,197,90,.05)}
+.res-badge{font-size:11px;font-weight:500;background:rgba(232,197,90,.15);color:var(--dou);padding:3px 12px;border-radius:20px;display:inline-block;margin-bottom:10px;text-transform:uppercase;letter-spacing:2px;border:1px solid var(--dou3)}
+.res-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,4vw,1.8rem);font-weight:300;color:var(--br);margin:0 0 6px;line-height:1.3}
+.res-tag{font-size:16px;color:var(--br3);margin:0 0 14px;line-height:1.6;font-style:italic}
+.res-phases{display:flex;gap:6px;flex-wrap:wrap}
+.res-phase{font-size:10px;background:rgba(232,197,90,.12);color:var(--dou);padding:4px 10px;border-radius:20px;border:1px solid var(--dou3)}
+
+.arco{background:rgba(232,197,90,.07);border:1px solid var(--dou3);border-radius:10px;padding:1rem 1.25rem;margin-bottom:14px}
+.arco-l{font-size:11px;font-weight:500;color:var(--dou);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+.arco-t{font-size:16px;color:var(--br2);line-height:1.8;font-style:italic}
+
+.sess-lbl{font-size:11px;font-weight:500;color:var(--br3);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+.sess-item{border:1px solid var(--borda);border-radius:12px;margin-bottom:8px;background:rgba(255,255,255,.03);overflow:hidden}
+.sess-head{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;transition:background .15s}
+.sess-head:hover{background:rgba(255,255,255,.05)}
+.sess-num{width:34px;height:34px;background:linear-gradient(135deg,var(--dou3),var(--dou2));border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--az);flex-shrink:0;font-weight:600}
+.sess-info{flex:1}
+.sess-titulo{font-size:17px;font-weight:400;color:var(--br);margin:0 0 3px}
+.sess-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--br3)}
+.sess-chev{font-size:16px;color:var(--br3);transition:transform .2s}
+.sess-body{display:none;padding:0 16px 16px;border-top:1px solid var(--borda)}
+.sess-body.open{display:block}
+
+.emo{display:flex;align-items:flex-start;gap:10px;margin-top:12px;background:rgba(255,255,255,.04);border-radius:8px;padding:12px}
+.emo-side{flex:1}
+.emo-lbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px}
+.emo-val{font-size:15px;line-height:1.5}
+.emo-arr{font-size:18px;color:var(--dou);margin-top:4px;flex-shrink:0}
+
+.chip{background:rgba(255,255,255,.04);border-radius:8px;padding:10px 12px;margin-top:8px}
+.chip-l{font-size:11px;color:var(--br4);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px}
+.chip-v{font-size:16px;color:var(--br2);line-height:1.55}
+
+.proto{margin-top:8px;border:1px solid rgba(107,140,255,.3);border-radius:8px;overflow:hidden}
+.proto-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(107,140,255,.1);cursor:pointer}
+.proto-l{font-size:11px;font-weight:600;color:#93A7FF;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:2px}
+.proto-dur{font-size:13px;color:rgba(147,167,255,.8)}
+.proto-chev{font-size:14px;color:#93A7FF;transition:transform .2s}
+.proto-body{display:none;padding:12px;background:rgba(107,140,255,.05);border-top:1px solid rgba(107,140,255,.2)}
+.proto-body.open{display:block}
+.proto-body ol{margin:0;padding-left:18px}
+.proto-body li{font-size:16px;color:rgba(147,167,255,.9);line-height:1.65;margin-bottom:8px}
+.proto-body li:last-child{margin-bottom:0}
+.proto-ref{margin-top:10px;padding-top:10px;border-top:1px solid rgba(107,140,255,.2);font-size:11px;color:var(--br4);font-style:italic}
+
+.tarefa{margin-top:8px;background:rgba(93,216,122,.1);border:1px solid rgba(93,216,122,.3);border-radius:8px;padding:10px 12px}
+.tarefa-l{font-size:11px;font-weight:500;color:var(--verde);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px}
+.tarefa-v{font-size:16px;color:rgba(93,216,122,.85);line-height:1.55}
+
+.alerta{margin-top:8px;background:rgba(232,197,90,.07);border:1px solid var(--dou3);border-radius:8px;padding:10px 12px}
+.alerta-l{font-size:11px;font-weight:500;color:var(--dou3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px}
+.alerta-v{font-size:16px;color:var(--br3);line-height:1.55}
+
+.client-box{border:1px solid var(--borda);border-radius:12px;padding:1.25rem;background:rgba(255,255,255,.03);margin-bottom:14px;margin-top:4px}
+
+/* PRECIFICAÇÃO */
+.preco-mod{border:1px solid var(--dou3);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.preco-hdr{background:linear-gradient(135deg,rgba(232,197,90,.15),rgba(232,197,90,.05));padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--dou3)}
+.preco-form{padding:1.25rem;background:var(--az2)}
+.preco-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.preco-res{padding:1.25rem;background:var(--az2)}
+.faixas{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.faixa{border-radius:10px;padding:12px;text-align:center}
+.faixa.dest{background:rgba(232,197,90,.12);border:2px solid var(--dou)}
+.faixa.norm{background:rgba(255,255,255,.04);border:1px solid var(--borda)}
+.faixa-l{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}
+.faixa.dest .faixa-l{color:var(--dou)}
+.faixa.norm .faixa-l{color:var(--br4)}
+.faixa-v{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:400;line-height:1}
+.faixa.dest .faixa-v{color:var(--dou)}
+.faixa.norm .faixa-v{color:var(--br)}
+
+.bloco{background:rgba(255,255,255,.04);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.bloco.verde{background:rgba(232,197,90,.07)}
+.bloco.escuro{background:linear-gradient(135deg,var(--az3),var(--az2));border:1px solid var(--dou3)}
+.bloco-l{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px}
+.bloco.verde .bloco-l{color:var(--dou)}
+.bloco.escuro .bloco-l{color:rgba(255,255,255,.4)}
+.bloco-v{font-size:15px;line-height:1.7}
+.bloco.verde .bloco-v{color:var(--dou2)}
+.bloco.escuro .bloco-v{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--dou2);font-style:italic}
+
+.act-row{display:flex;gap:8px;flex-wrap:wrap}
+.rodape{margin-top:24px;padding-top:16px;border-top:1px solid var(--borda);display:flex;align-items:center;justify-content:center;gap:10px;opacity:.4}
+.rodape-txt{font-size:10px;color:var(--br3);letter-spacing:1px}
+
+/* SALVOS */
+.salvo-item{background:rgba(255,255,255,.04);border:1px solid var(--borda);border-radius:12px;padding:1rem;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.salvo-icone{width:38px;height:38px;background:rgba(232,197,90,.1);border:1px solid var(--dou3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.salvo-info{flex:1;min-width:0}
+.salvo-nome{font-size:13px;font-weight:500;color:var(--br);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.salvo-proc{font-size:11px;color:var(--br3);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.salvo-data{font-size:10px;color:var(--br4);margin-top:2px}
+.badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
+
+/* BOAS-VINDAS */
+.bv-overlay{position:fixed;inset:0;background:rgba(6,13,30,.95);z-index:999;display:flex;align-items:center;justify-content:center;padding:1rem;animation:surgir .4s ease forwards}
+.bv-box{background:linear-gradient(135deg,#0f1e38,#152444);border:1px solid var(--dou3);border-radius:20px;padding:2rem 1.5rem;max-width:420px;width:100%;text-align:center}
+.bv-icon{font-size:2.5rem;margin-bottom:1rem}
+.bv-titulo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:var(--br);margin-bottom:.5rem}
+.bv-sub{font-size:13px;color:var(--br3);margin-bottom:1.5rem;line-height:1.6}
+.bv-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem;text-align:left}
+.bv-step{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.04);border-radius:10px;padding:10px 14px}
+.bv-num{width:26px;height:26px;background:linear-gradient(135deg,var(--dou3),var(--dou2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--az);flex-shrink:0}
+.bv-txt{font-size:13px;color:var(--br2);line-height:1.5}
+.bv-txt strong{color:var(--dou);display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+
+/* PAYWALL */
+.pw-overlay{position:fixed;inset:0;background:rgba(6,13,30,.97);z-index:999;display:flex;align-items:center;justify-content:center;padding:1rem;animation:surgir .4s ease forwards;overflow-y:auto}
+.pw-box{background:linear-gradient(135deg,#0f1e38,#152444);border:1px solid var(--dou3);border-radius:20px;padding:2rem 1.5rem;max-width:420px;width:100%;text-align:center;margin:auto}
+.pw-icon{font-size:2.5rem;margin-bottom:1rem}
+.pw-titulo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:var(--br);margin-bottom:.5rem}
+.pw-sub{font-size:14px;color:var(--br3);margin-bottom:1.5rem;line-height:1.7}
+.pw-resultado{background:rgba(232,197,90,.07);border:1px solid var(--dou3);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;text-align:left}
+.pw-resultado-lbl{font-size:10px;font-weight:600;color:var(--dou);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.pw-resultado-txt{font-size:13px;color:var(--br2);line-height:1.6;font-style:italic}
+.pw-oferta{background:rgba(255,255,255,.04);border:1px solid var(--borda);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.pw-beneficios{list-style:none;text-align:left;margin-bottom:1rem}
+.pw-beneficios li{font-size:13px;color:var(--br2);padding:5px 0;display:flex;gap:8px;align-items:flex-start}
+.pw-beneficios li span{color:var(--dou);flex-shrink:0}
+
+@media(max-width:520px){.fmt-grid,.preco-grid,.faixas{grid-template-columns:1fr}}
+@media print{.no-print{display:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- BOAS-VINDAS -->
+<div class="bv-overlay" id="boasVindas">
+  <div class="bv-box">
+    <div class="bv-icon">✦</div>
+    <div class="bv-titulo">Processo Terapêutico Pro</div>
+    <div class="bv-sub">Crie processos terapêuticos estruturados e profissionais em minutos — sem precisar de tecnologia.</div>
+    <div class="bv-steps">
+      <div class="bv-step"><div class="bv-num">1</div><div class="bv-txt"><strong>Seu perfil</strong>Informe seu nome, abordagem e público que você atende</div></div>
+      <div class="bv-step"><div class="bv-num">2</div><div class="bv-txt"><strong>Suas técnicas</strong>Selecione as técnicas que você usa no seu trabalho</div></div>
+      <div class="bv-step"><div class="bv-num">3</div><div class="bv-txt"><strong>O cliente</strong>Descreva a queixa e o objetivo terapêutico</div></div>
+      <div class="bv-step"><div class="bv-num">4</div><div class="bv-txt"><strong>Resultado</strong>Receba um processo completo com sessões, protocolos e precificação</div></div>
+    </div>
+    <div style="font-size:12px;color:var(--dou);margin-bottom:1rem">🎁 Experimente gratuitamente — 1 geração completa sem custo</div>
+    <button class="btnm" style="width:100%;padding:14px;font-size:15px" onclick="fecharBoasVindas()">✦ Começar agora</button>
+  </div>
+</div>
+
+<!-- PAYWALL -->
+<div class="pw-overlay" id="paywall" style="display:none">
+  <div class="pw-box">
+    <div class="pw-icon">✨</div>
+    <div class="pw-titulo">Gostou do resultado?</div>
+    <div class="pw-sub">Você acabou de ver o que o Processo Terapêutico Pro pode fazer. Para continuar gerando processos ilimitados para todos os seus clientes, garanta seu acesso completo.</div>
+    <div class="pw-resultado" id="pwResultadoBox" style="display:none">
+      <div class="pw-resultado-lbl">✦ Processo gerado agora</div>
+      <div class="pw-resultado-txt" id="pwResultadoTxt"></div>
+    </div>
+    <div class="pw-oferta">
+      <ul class="pw-beneficios">
+        <li><span>✦</span>Gerações ilimitadas para todos os seus clientes</li>
+        <li><span>✦</span>Processos de 5 ou 10 sessões com protocolos completos</li>
+        <li><span>✦</span>Texto de apresentação pronto para o cliente</li>
+        <li><span>✦</span>Precificação estratégica para o seu mercado</li>
+        <li><span>✦</span>Acesso vitalício — pague uma vez, use para sempre</li>
+      </ul>
+      <a href="https://processoterapeutico-pro.netlify.app/" target="_blank" id="linkComprar" class="btnm" style="width:100%;padding:14px;font-size:15px;display:block;text-decoration:none;box-sizing:border-box;text-align:center">✦ Quero acesso completo — R$ 97</a>
+    </div>
+    <div style="font-size:11px;color:var(--br4);margin-top:10px">Acesso liberado imediatamente após a compra</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="hdr no-print">
+  <div class="hdr-row">
+    <svg class="hdr-logo" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="26" cy="26" r="25" fill="#0a1628" stroke="#E8C55A" stroke-width="1.2"/>
+      <circle cx="26" cy="26" r="20" fill="none" stroke="#B89830" stroke-width="0.5" stroke-dasharray="2 2"/>
+      <path d="M26 10 L26 42" stroke="#E8C55A" stroke-width="0.6" opacity="0.3"/>
+      <path d="M10 26 L42 26" stroke="#E8C55A" stroke-width="0.6" opacity="0.3"/>
+      <circle cx="26" cy="26" r="5" fill="none" stroke="#E8C55A" stroke-width="1.2"/>
+      <circle cx="26" cy="17" r="3" fill="none" stroke="#E8C55A" stroke-width="0.8" opacity="0.7"/>
+      <circle cx="26" cy="35" r="3" fill="none" stroke="#E8C55A" stroke-width="0.8" opacity="0.7"/>
+      <circle cx="17" cy="26" r="3" fill="none" stroke="#E8C55A" stroke-width="0.8" opacity="0.7"/>
+      <circle cx="35" cy="26" r="3" fill="none" stroke="#E8C55A" stroke-width="0.8" opacity="0.7"/>
+      <text x="26" y="30" text-anchor="middle" font-family="Georgia,serif" font-size="9" font-weight="bold" fill="#E8C55A" letter-spacing="1">DF</text>
+    </svg>
+    <div>
+      <div class="hdr-nome">Denis França <span style="opacity:.4;margin:0 6px">|</span> <span style="font-size:.85em;color:var(--dou);letter-spacing:1px;font-style:normal">Terapeuta</span></div>
+      <div class="hdr-sub" style="font-size:clamp(1rem,3vw,1.35rem);font-weight:500;color:var(--dou2);letter-spacing:.5px">Processo Terapêutico Pro</div>
+    </div>
+    <button class="btn-salvos" onclick="toggleSalvos()" id="btnSalvos">📂 Salvos</button>
+  </div>
+  <div class="hdr-linha"></div>
+  <div class="hdr-desc">Protocolos clínicos · Progressão emocional · Precificação estratégica</div>
+</div>
+
+<!-- TABS -->
+<div class="tabs no-print" id="tabsEl">
+  <div class="tab active" id="t0">Perfil</div>
+  <div class="tab" id="t1">Técnicas</div>
+  <div class="tab" id="t2">Foco</div>
+  <div class="tab" id="t3">Formato</div>
+  <div class="tab" id="t4">Resultado</div>
+</div>
+
+<!-- SALVOS -->
+<div id="telaSalvos" style="display:none;animation:surgir .3s ease forwards">
+  <div class="card-title" style="color:var(--dou);font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px">📂 Processos Salvos</div>
+  <div id="listaSalvos"></div>
+  <button class="btng" onclick="toggleSalvos()">← Voltar</button>
+</div>
+
+<!-- PASSO 0 -->
+<div id="sec0" style="animation:surgir .3s ease forwards">
+  <div class="card">
+    <div class="card-title">Sobre você</div>
+    <div class="campo"><label>Seu nome</label><input type="text" id="fNome" placeholder="Ex: Ana Paula Souza"/></div>
+    <div class="campo"><label>Abordagem principal</label><input type="text" id="fAbordagem" placeholder="Ex: Reiki, Integrativa, TCC, Holística..."/></div>
+    <div class="campo"><label>Público que você atende</label><textarea id="fPublico" placeholder="Ex: Adultos com ansiedade, casais em crise, profissionais com burnout..."></textarea></div>
+  </div>
+  <div class="brow"><span></span><button class="btnm" onclick="ir(1)">Próximo →</button></div>
+</div>
+
+<!-- PASSO 1 -->
+<div id="sec1" style="display:none;animation:surgir .3s ease forwards">
+  <div class="card">
+    <div class="card-title">Suas técnicas</div>
+    <div class="tagbox" id="tagbox" onclick="document.getElementById('tginp').focus()">
+      <input class="taginp" id="tginp" placeholder="Digite e pressione Enter..."/>
+    </div>
+    <div class="hint">Clique nas sugestões ou digite sua técnica</div>
+    <div class="presets" id="presets">
+      <button class="preset" onclick="addP(this)">Acupuntura</button>
+      <button class="preset" onclick="addP(this)">Ancoragem</button>
+      <button class="preset" onclick="addP(this)">Arteterapia</button>
+      <button class="preset" onclick="addP(this)">Auriculoterapia</button>
+      <button class="preset" onclick="addP(this)">Biodança</button>
+      <button class="preset" onclick="addP(this)">Bioenergética</button>
+      <button class="preset" onclick="addP(this)">Breathwork</button>
+      <button class="preset" onclick="addP(this)">Constelação Familiar</button>
+      <button class="preset" onclick="addP(this)">Cromoterapia</button>
+      <button class="preset" onclick="addP(this)">EFT</button>
+      <button class="preset" onclick="addP(this)">Florais de Bach</button>
+      <button class="preset" onclick="addP(this)">Geoterapia</button>
+      <button class="preset" onclick="addP(this)">Hipnoterapia</button>
+      <button class="preset" onclick="addP(this)">Imposição de Mãos</button>
+      <button class="preset" onclick="addP(this)">Meditação Guiada</button>
+      <button class="preset" onclick="addP(this)">Mesa Radiônica</button>
+      <button class="preset" onclick="addP(this)">Mindfulness</button>
+      <button class="preset" onclick="addP(this)">Musicoterapia</button>
+      <button class="preset" onclick="addP(this)">Numerologia Terapêutica</button>
+      <button class="preset" onclick="addP(this)">Psicodrama</button>
+      <button class="preset" onclick="addP(this)">Reflexologia</button>
+      <button class="preset" onclick="addP(this)">Reiki</button>
+      <button class="preset" onclick="addP(this)">Regressão de Memória</button>
+      <button class="preset" onclick="addP(this)">Respiração Consciente</button>
+      <button class="preset" onclick="addP(this)">Sofrologia</button>
+      <button class="preset" onclick="addP(this)">Tarô Terapêutico</button>
+      <button class="preset" onclick="addP(this)">Thetahealing</button>
+      <button class="preset" onclick="addP(this)">Xamanismo Terapêutico</button>
+      <button class="preset" onclick="addP(this)">Yoga Terapêutico</button>
+    </div>
+  </div>
+  <div class="brow"><button class="btng" onclick="ir(0)">← Voltar</button><button class="btnm" onclick="ir(2)">Próximo →</button></div>
+</div>
+
+<!-- PASSO 2 -->
+<div id="sec2" style="display:none;animation:surgir .3s ease forwards">
+  <div class="card">
+    <div class="card-title">Foco terapêutico</div>
+    <div class="campo"><label>Queixa principal</label><input type="text" id="fQueixa" placeholder="Ex: Ansiedade generalizada, luto, baixa autoestima..."/></div>
+    <div class="campo"><label>Objetivo terapêutico</label><textarea id="fObjetivo" placeholder="Ex: Desenvolver regulação emocional, reconectar-se com seus valores..."></textarea></div>
+    <div class="campo"><label>Perfil do cliente ideal</label><textarea id="fPerfil" placeholder="Ex: Adulto com crises de ansiedade recorrentes, dificuldade de dormir..."></textarea></div>
+  </div>
+  <div class="brow"><button class="btng" onclick="ir(1)">← Voltar</button><button class="btnm" onclick="ir(3)">Próximo →</button></div>
+</div>
+
+<!-- PASSO 3 -->
+<div id="sec3" style="display:none;animation:surgir .3s ease forwards">
+  <div class="card">
+    <div class="card-title">Formato do processo</div>
+    <div class="fmt-grid" style="margin-bottom:16px">
+      <div class="fmt sel" data-f="5" onclick="selFmt(this)">
+        <div class="fmt-icon">📋</div><h4>5 sessões</h4><p>Intensivo e focado. Resultados rápidos.</p>
+      </div>
+      <div class="fmt" data-f="10" onclick="selFmt(this)">
+        <div class="fmt-icon">📅</div><h4>10 sessões</h4><p>Completo e aprofundado. Ticket mais alto.</p>
+      </div>
+    </div>
+    <div class="campo"><label>Nome do cliente (para salvar)</label><input type="text" id="fCliente" placeholder="Ex: Maria Silva (opcional)"/></div>
+    <div class="campo"><label>Extras (opcional)</label><textarea id="fExtras" style="min-height:64px" placeholder="Ex: ritual de encerramento, materiais entre sessões..."></textarea></div>
+  </div>
+  <div id="erroBox" class="erro" style="display:none"></div>
+  <div class="brow"><button class="btng" onclick="ir(2)">← Voltar</button><button class="btnm" id="btnGerar" onclick="gerar()">✦ Gerar processo</button></div>
+</div>
+
+<!-- LOADING -->
+<div id="secLoad" style="display:none">
+  <div class="loading">
+    <div class="spinner"></div>
+    <div class="load-msg" id="loadMsg">Analisando suas técnicas...</div>
+    <div class="load-sub">Construindo uma jornada rica e personalizada...</div>
+  </div>
+</div>
+
+<!-- RESULTADO -->
+<div id="sec4" style="display:none;animation:surgir .3s ease forwards">
+  <div class="res-hero">
+    <div class="res-badge" id="rBadge"></div>
+    <div class="res-title" id="rTitle"></div>
+    <div class="res-tag" id="rTag"></div>
+    <div class="res-phases" id="rPhases"></div>
+  </div>
+  <div class="arco" id="arcoBox">
+    <div class="arco-l">✦ Fio Condutor da Jornada</div>
+    <div class="arco-t" id="rArco"></div>
+  </div>
+  <div class="sess-lbl">Jornada de Sessões</div>
+  <div id="sessLista"></div>
+  <div class="client-box">
+    <div class="card-title">✉️ Texto de apresentação ao cliente</div>
+    <div style="font-size:14px;color:var(--br2);line-height:1.85;border-left:2px solid var(--dou3);padding-left:14px;font-style:italic" id="rClientText"></div>
+  </div>
+
+  <!-- PRECIFICAÇÃO -->
+  <div class="preco-mod no-print">
+    <div class="preco-hdr">
+      <div>
+        <div style="font-size:13px;font-weight:500;color:var(--dou);margin-bottom:2px">💰 Precificação do processo</div>
+        <div style="font-size:11px;color:var(--br3)">Descubra quanto cobrar com base no seu perfil e mercado</div>
+      </div>
+      <button class="btnm" style="font-size:12px;padding:8px 16px" id="btnCalc" onclick="abrirPreco()">Calcular →</button>
+    </div>
+    <div class="preco-form" id="precoForm" style="display:none">
+      <div class="preco-grid">
+        <div class="campo"><label>Sua cidade</label><input type="text" id="pCidade" placeholder="Ex: São Paulo..."/></div>
+        <div class="campo"><label>Experiência</label>
+          <select id="pExp"><option value="">Selecione</option><option>Menos de 1 ano</option><option>1 a 3 anos</option><option>3 a 5 anos</option><option>5 a 10 anos</option><option>Mais de 10 anos</option></select>
+        </div>
+        <div class="campo"><label>Público-alvo</label>
+          <select id="pPub"><option value="">Selecione</option><option value="popular (classe C/D)">Popular — C/D</option><option value="classe média (classe B)">Classe média — B</option><option value="alto padrão (classe A)">Alto padrão — A</option><option value="misto">Misto</option></select>
+        </div>
+        <div class="campo"><label>Modalidade</label>
+          <select id="pMod"><option value="">Selecione</option><option>Presencial</option><option>Online</option><option value="híbrido">Híbrido</option></select>
+        </div>
+      </div>
+      <div class="campo"><label>Inclui extras?</label>
+        <select id="pExt"><option value="">Selecione</option><option value="apenas as sessões">Apenas as sessões</option><option value="sessões + materiais">Sessões + materiais</option><option value="sessões + suporte WhatsApp">Sessões + suporte WhatsApp</option><option value="sessões + materiais + suporte">Sessões + materiais + suporte</option></select>
+      </div>
+      <div id="erroPreco" class="erro" style="display:none"></div>
+      <div id="loadPreco" style="display:none;text-align:center;padding:1rem 0">
+        <div class="spinner" style="width:28px;height:28px;margin:0 auto 8px"></div>
+        <div style="font-size:12px;color:var(--br3)" id="msgPreco">Analisando seu perfil...</div>
+      </div>
+      <div style="display:flex;gap:8px" id="precoBtns">
+        <button class="btnm" onclick="calcularPreco()">Calcular</button>
+        <button class="btng" onclick="fecharPreco()">Cancelar</button>
+      </div>
+    </div>
+    <div class="preco-res" id="precoRes" style="display:none">
+      <div class="faixas">
+        <div class="faixa norm"><div class="faixa-l">Mínimo</div><div class="faixa-v" id="pMin">—</div></div>
+        <div class="faixa dest"><div class="faixa-l">✦ Ideal</div><div class="faixa-v" id="pIdeal">—</div></div>
+        <div class="faixa norm"><div class="faixa-l">Premium</div><div class="faixa-v" id="pMax">—</div></div>
+      </div>
+      <div style="background:rgba(232,197,90,.07);border:1px solid var(--dou3);border-radius:8px;padding:10px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:12px;color:var(--br3)">Sessão avulsa equivalente</span>
+        <strong style="font-size:13px;color:var(--dou)" id="pAvulsa">—</strong>
+      </div>
+      <div class="bloco"><div class="bloco-l" style="color:var(--br4)">Como chegamos nesses valores</div><div class="bloco-v" style="color:var(--br3)" id="pRac"></div></div>
+      <div class="bloco verde"><div class="bloco-l">💡 Estratégia recomendada</div><div class="bloco-v" id="pEstr"></div></div>
+      <div class="bloco escuro"><div class="bloco-l">🗣️ Argumento de valor</div><div class="bloco-v" id="pArg"></div></div>
+      <div id="errosBox" style="display:none;background:rgba(229,115,115,.1);border:1px solid rgba(229,115,115,.3);border-radius:8px;padding:10px 12px;margin-top:8px">
+        <div style="font-size:9px;font-weight:500;color:#E57373;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">⚠️ Erros comuns neste perfil</div>
+        <div id="errosList"></div>
+      </div>
+      <button class="btng" style="margin-top:10px;font-size:11px" onclick="recalcPreco()">↺ Recalcular</button>
+    </div>
+  </div>
+
+  <div class="act-row no-print">
+    <button class="btnm" id="btnCopiar" onclick="copiarTexto()">📋 Copiar texto</button>
+    <button class="btng" onclick="window.print()">🖨️ Imprimir</button>
+    <button class="btng" id="btnSalvar" onclick="salvar()">💾 Salvar</button>
+    <button class="btng" onclick="reiniciar()">↺ Novo processo</button>
+  </div>
+
+  <div class="rodape no-print">
+    <svg width="28" height="28" viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="25" fill="#0a1628" stroke="#E8C55A" stroke-width="1.2"/><circle cx="26" cy="26" r="5" fill="none" stroke="#E8C55A" stroke-width="1.2"/><text x="26" y="30" text-anchor="middle" font-family="Georgia,serif" font-size="9" font-weight="bold" fill="#E8C55A">DF</text></svg>
+    <div class="rodape-txt">Denis França · Processo Terapêutico Pro</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+var step=0,fmt=5,tags=[],resultado=null,precoData=null;
+var salvos=[];try{salvos=JSON.parse(localStorage.getItem('ptp_salvos')||'[]');}catch(e){}
+
+/* ====== SISTEMA DE 1 GERAÇÃO GRATUITA ====== */
+var LINK_VENDAS='https://processoterapeutico-pro.netlify.app/'; // substitua pelo link da sua página de vendas
+
+function geracoesUsadas(){return parseInt(localStorage.getItem('ptp_usos')||'0',10);}
+function incrementarUso(){localStorage.setItem('ptp_usos',String(geracoesUsadas()+1));}
+function podeGerar(){return geracoesUsadas()<1;}
+
+function mostrarPaywall(){
+  // Mostra o título do processo gerado no paywall
+  if(resultado&&resultado.processTitle){
+    document.getElementById('pwResultadoTxt').textContent='"'+resultado.processTitle+'" — '+fmt+' sessões estruturadas com protocolos e texto de apresentação ao cliente.';
+    document.getElementById('pwResultadoBox').style.display='block';
+  }
+  document.getElementById('linkComprar').href=LINK_VENDAS;
+  document.getElementById('paywall').style.display='flex';
+}
+
+function fecharBoasVindas(){
+  var bv=document.getElementById('boasVindas');
+  bv.style.opacity='0';bv.style.transition='opacity .3s';
+  setTimeout(function(){bv.style.display='none';},300);
+  localStorage.setItem('ptp_bv_visto','1');
+}
+if(localStorage.getItem('ptp_bv_visto')){
+  document.addEventListener('DOMContentLoaded',function(){
+    var bv=document.getElementById('boasVindas');if(bv)bv.style.display='none';
+  });
+}
+
+var MSGS=["Analisando suas técnicas...","Identificando protocolos clínicos...","Construindo o fio narrativo...","Desenhando a progressão emocional...","Criando tarefas entre sessões...","Mapeando sinais de atenção...","Finalizando seu processo..."];
+var MSGS_P=["Analisando seu perfil...","Pesquisando o mercado...","Calculando o valor justo...","Preparando sua estratégia..."];
+var INTENS={leve:{bg:"rgba(93,216,122,.12)",bord:"#5DD87A",txt:"#5DD87A",lbl:"Leve"},media:{bg:"rgba(232,197,90,.12)",bord:"#E8C55A",txt:"#E8C55A",lbl:"Média"},intensa:{bg:"rgba(229,115,115,.12)",bord:"#E57373",txt:"#E57373",lbl:"Intensa"}};
+var loadInt=null,loadInt2=null;
+
+function tratarErro(e){
+  var m=String(e&&e.message||e);
+  if(m.includes("exceeded_limit")||m.includes("rate_limit")||m.includes("529")||m.includes("overloaded"))return "⏸️ Sistema sobrecarregado. Aguarde alguns minutos e tente novamente.";
+  if(m.includes("limite_atingido"))return "⏸️ "+m;
+  if(m.includes("401")||m.includes("auth"))return "🔑 Problema de autenticação. Recarregue a página.";
+  return "❌ Erro inesperado. Tente novamente em instantes.";
+}
+
+function ir(n){
+  document.getElementById('sec'+step).style.display='none';
+  document.getElementById('secLoad').style.display='none';
+  for(var i=0;i<5;i++){var t=document.getElementById('t'+i);t.className='tab';if(i<n)t.classList.add('done');}
+  step=n;
+  document.getElementById('sec'+n).style.display='block';
+  document.getElementById('t'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function selFmt(el){document.querySelectorAll('.fmt').forEach(function(c){c.classList.remove('sel');});el.classList.add('sel');fmt=parseInt(el.dataset.f);}
+
+document.getElementById('tginp').addEventListener('keydown',function(e){
+  if((e.key==='Enter'||e.key===',')&&this.value.trim()){e.preventDefault();addTag(this.value.trim());this.value='';}
+  if(e.key==='Backspace'&&!this.value&&tags.length)rmTag(tags.length-1);
+});
+function addTag(v){var c=v.replace(/,/g,'').trim();if(!c||tags.includes(c))return;tags.push(c);renderTags();}
+function addP(btn){addTag(btn.textContent.trim());btn.style.display='none';}
+function rmTag(i){var r=tags[i];tags.splice(i,1);renderTags();document.querySelectorAll('.preset').forEach(function(b){if(b.textContent.trim()===r)b.style.display='';});}
+function renderTags(){
+  var w=document.getElementById('tagbox'),inp=document.getElementById('tginp');
+  w.innerHTML='';
+  tags.forEach(function(t,i){var d=document.createElement('div');d.className='tag';d.innerHTML=esc(t)+'<button onclick="rmTag('+i+')">×</button>';w.appendChild(d);});
+  w.appendChild(inp);
+}
+
+function showErr(id,msg){var e=document.getElementById(id);e.textContent=msg;e.style.display='block';}
+function hideErr(id){document.getElementById(id).style.display='none';}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function buildPrompt(){
+  var n=document.getElementById('fNome').value.trim();
+  var a=document.getElementById('fAbordagem').value.trim();
+  var p=document.getElementById('fPublico').value.trim();
+  var q=document.getElementById('fQueixa').value.trim();
+  var o=document.getElementById('fObjetivo').value.trim();
+  var pr=document.getElementById('fPerfil').value.trim();
+  var ex=document.getElementById('fExtras').value.trim();
+  return 'Você é especialista em criação de processos terapêuticos estruturados e vendáveis.\n\nDados:\n- Terapeuta: '+(n||'Não informado')+'\n- Abordagem: '+(a||'Integrativa')+'\n- Público: '+(p||'Adultos')+'\n- Técnicas: '+tags.join(', ')+'\n- Queixa: '+q+'\n- Objetivo: '+(o||'Transformação e bem-estar')+'\n- Perfil do cliente: '+(pr||'Adultos buscando transformação')+'\n- Sessões: '+fmt+'\n- Extras: '+(ex||'Nenhum')+'\n\nRETORNE APENAS JSON PURO. Sem texto, sem markdown, sem backticks:\n\n{"processTitle":"título poético orientado à transformação","processTagline":"frase de impacto até 12 palavras","narrativeArc":"2 a 3 frases sobre o fio emocional da jornada","phaseNames":["fase inicial","fase central","fase final"],"sessions":[{"number":1,"title":"título evocativo","phase":"Diagnóstico","technique":"técnica usada","objective":"objetivo claro","emotionalEntry":"como o cliente entra emocionalmente","emotionalExit":"como o cliente sai emocionalmente","intensity":"leve","protocol":{"hasProtocol":true,"steps":["passo 1","passo 2","passo 3"],"duration":"tempo estimado","reference":"referência bibliográfica"},"task":"tarefa simples entre sessões","alert":"o que observar se o cliente resistir"}],"clientPresentationText":"texto acolhedor em primeira pessoa 150 a 200 palavras sem nomes técnicos"}\n\nREGRAS: Use SOMENTE as técnicas fornecidas. intensity: leve, media ou intensa. Progressão: Diagnóstico, Exploração, Trabalho Central, Integração, Encerramento. Protocolo somente para: Reiki,Auriculoterapia,Acupuntura,EFT,EMDR,TCC,Mindfulness,Hipnoterapia,Sofrologia,Constelação Familiar,Florais de Bach,Reflexologia,Biodança,Musicoterapia,Yoga Terapêutico,ACT,Terapia do Esquema,Bioenergética,Psicodrama. Para demais: hasProtocol:false. APENAS O JSON.';
+}
+
+function buildPromptPreco(){
+  return 'Especialista em precificação terapêutica brasileira.\n\nProcesso: '+resultado.processTitle+' | Técnicas: '+tags.join(', ')+' | Sessões: '+fmt+' | Queixa: '+document.getElementById('fQueixa').value.trim()+'\nCidade: '+document.getElementById('pCidade').value.trim()+' | Experiência: '+document.getElementById('pExp').value+' | Público: '+document.getElementById('pPub').value+' | Modalidade: '+document.getElementById('pMod').value+' | Extras: '+document.getElementById('pExt').value+'\n\nRETORNE APENAS JSON PURO:\n{"precoMinimo":0,"precoIdeal":0,"precoMaximo":0,"precoSessaoAvulsa":0,"raciocinio":"3 frases explicando os valores","estrategia":"2 frases sobre como apresentar o preço","errosComuns":["erro 1","erro 2","erro 3"],"argumentoDeValor":"frase poderosa de justificativa do valor"}\n\nValores em reais inteiros. APENAS O JSON.';
+}
+
+async function chamarAPI(prompt,tipo){
+  var res=await fetch('/api/gerar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,tipo})});
+  var data=await res.json();if(res.status===429)throw new Error('limite_atingido: '+data.mensagem);
+  if(!res.ok)throw new Error(data.mensagem||'Erro '+res.status);
+  return data.resultado;
+}
+
+function parseJSON(raw){
+  var clean=raw.replace(/^```(?:json)?\n?/,'').replace(/\n?```$/,'').trim();
+  var m=clean.match(/\{[\s\S]*\}/);
+  if(!m)throw new Error('JSON inválido na resposta da IA.');
+  return JSON.parse(m[0]);
+}
+
+async function gerar(){
+  var queixa=document.getElementById('fQueixa').value.trim();
+  if(!queixa){showErr('erroBox','Informe a queixa principal antes de continuar.');return;}
+  if(!tags.length){showErr('erroBox','Adicione ao menos uma técnica antes de continuar.');return;}
+  // Verificar se pode gerar
+  if(!podeGerar()){mostrarPaywall();return;}
+  hideErr('erroBox');
+  document.getElementById('sec3').style.display='none';
+  document.getElementById('secLoad').style.display='block';
+  document.getElementById('btnGerar').disabled=true;
+  var mi=0;
+  loadInt=setInterval(function(){mi=(mi+1)%MSGS.length;document.getElementById('loadMsg').textContent=MSGS[mi];},1600);
+  try{
+    var raw=await chamarAPI(buildPrompt(),'processo');
+    var parsed=parseJSON(raw);
+    if(!parsed.sessions||!parsed.sessions.length)throw new Error('Processo sem sessões. Tente novamente.');
+    clearInterval(loadInt);
+    resultado=parsed;
+    precoData=null;
+    incrementarUso(); // registra o uso APÓS sucesso
+    document.getElementById('secLoad').style.display='none';
+    renderResultado(parsed);
+  }catch(e){
+    clearInterval(loadInt);
+    document.getElementById('secLoad').style.display='none';
+    document.getElementById('sec3').style.display='block';
+    document.getElementById('t3').classList.add('active');
+    document.getElementById('btnGerar').disabled=false;
+    showErr('erroBox',tratarErro(e));
+  }
+}
+
+function renderResultado(d){
+  for(var i=0;i<5;i++){var t=document.getElementById('t'+i);t.className='tab';if(i<4)t.classList.add('done');}
+  document.getElementById('t4').classList.add('active');
+  var cliente=document.getElementById('fCliente').value.trim();
+  document.getElementById('rBadge').textContent=fmt+' sessões'+(cliente?' · '+cliente:'');
+  document.getElementById('rTitle').textContent=d.processTitle||'';
+  document.getElementById('rTag').textContent=d.processTagline||'';
+  var ph=document.getElementById('rPhases');ph.innerHTML='';
+  if(d.phaseNames&&d.phaseNames.length)d.phaseNames.forEach(function(n,i){var s=document.createElement('span');s.className='res-phase';s.textContent=(i+1)+'. '+n;ph.appendChild(s);});
+  var arco=document.getElementById('arcoBox');
+  if(d.narrativeArc){document.getElementById('rArco').textContent=d.narrativeArc;arco.style.display='block';}else arco.style.display='none';
+  var lista=document.getElementById('sessLista');lista.innerHTML='';
+  d.sessions.forEach(function(s,i){
+    var iv=INTENS[s.intensity]||INTENS.media;
+    var proto=s.protocol;var hp=proto&&proto.hasProtocol&&proto.steps&&proto.steps.length;
+    var el=document.createElement('div');el.className='sess-item';
+    el.innerHTML='<div class="sess-head" onclick="togSess('+i+')">'
+      +'<div class="sess-num">'+s.number+'</div>'
+      +'<div class="sess-info"><div class="sess-titulo">'+esc(s.title||'')+'</div>'
+      +'<div class="sess-meta"><span>'+esc(s.phase||'')+'</span><span style="color:var(--borda)">·</span><span>'+esc(s.technique||'')+'</span><span style="color:var(--borda)">·</span>'
+      +'<span class="badge" style="background:'+iv.bg+';color:'+iv.txt+';border:1px solid '+iv.bord+'">'+iv.lbl+'</span>'
+      +(hp?'<span class="badge" style="background:rgba(107,140,255,.15);color:#93A7FF;border:1px solid rgba(107,140,255,.35)">📋 Protocolo</span>':'')
+      +'</div></div>'
+      +'<span class="sess-chev" id="chev'+i+'">▾</span></div>'
+      +'<div class="sess-body" id="sb'+i+'">'
+      +'<div class="emo"><div class="emo-side"><div class="emo-lbl" style="color:var(--br4)">O cliente entra</div><div class="emo-val" style="color:var(--br3)">'+esc(s.emotionalEntry||'')+'</div></div>'
+      +'<div class="emo-arr">→</div>'
+      +'<div class="emo-side"><div class="emo-lbl" style="color:var(--dou)">O cliente sai</div><div class="emo-val" style="color:var(--dou2);font-weight:500">'+esc(s.emotionalExit||'')+'</div></div></div>'
+      +'<div class="chip"><div class="chip-l">Objetivo da sessão</div><div class="chip-v">'+esc(s.objective||'')+'</div></div>'
+      +(hp?'<div class="proto"><div class="proto-head" onclick="togProto('+i+',event)">'
+        +'<div><div class="proto-l">📋 Protocolo — '+esc(s.technique)+'</div>'+(proto.duration?'<div class="proto-dur">Duração: '+esc(proto.duration)+'</div>':'')+'</div>'
+        +'<span class="proto-chev" id="pchev'+i+'">▾</span></div>'
+        +'<div class="proto-body" id="pb'+i+'"><ol>'+proto.steps.map(function(st){return '<li>'+esc(st)+'</li>';}).join('')+'</ol>'
+        +(proto.reference?'<div class="proto-ref">Ref: '+esc(proto.reference)+'</div>':'')+'</div></div>':'')
+      +(s.task?'<div class="tarefa"><div class="tarefa-l">🌿 Tarefa entre sessões</div><div class="tarefa-v">'+esc(s.task)+'</div></div>':'')
+      +(s.alert?'<div class="alerta"><div class="alerta-l">⚠️ Sinal de atenção</div><div class="alerta-v">'+esc(s.alert)+'</div></div>':'')
+      +'</div>';
+    lista.appendChild(el);
+  });
+  document.getElementById('rClientText').textContent=d.clientPresentationText||'';
+  document.getElementById('sec4').style.display='block';
+  document.getElementById('precoForm').style.display='none';
+  document.getElementById('precoRes').style.display='none';
+  document.getElementById('btnCalc').style.display='block';
+  togSess(0);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function togSess(i){var b=document.getElementById('sb'+i),c=document.getElementById('chev'+i);var o=b.classList.contains('open');b.classList.toggle('open',!o);c.style.transform=o?'':'rotate(180deg)';}
+function togProto(i,ev){if(ev)ev.stopPropagation();var b=document.getElementById('pb'+i),c=document.getElementById('pchev'+i);var o=b.classList.contains('open');b.classList.toggle('open',!o);c.style.transform=o?'':'rotate(180deg)';}
+
+function abrirPreco(){document.getElementById('precoForm').style.display='block';document.getElementById('btnCalc').style.display='none';}
+function fecharPreco(){document.getElementById('precoForm').style.display='none';document.getElementById('btnCalc').style.display='block';}
+function recalcPreco(){document.getElementById('precoRes').style.display='none';document.getElementById('precoForm').style.display='block';document.getElementById('btnCalc').style.display='none';document.getElementById('precoBtns').style.display='flex';}
+
+async function calcularPreco(){
+  if(!document.getElementById('pCidade').value.trim()){showErr('erroPreco','Informe sua cidade.');return;}
+  hideErr('erroPreco');
+  document.getElementById('precoBtns').style.display='none';
+  document.getElementById('loadPreco').style.display='block';
+  var mi=0;loadInt2=setInterval(function(){mi=(mi+1)%MSGS_P.length;document.getElementById('msgPreco').textContent=MSGS_P[mi];},1400);
+  try{
+    var raw=await chamarAPI(buildPromptPreco(),'preco');
+    var p=parseJSON(raw);
+    clearInterval(loadInt2);
+    document.getElementById('loadPreco').style.display='none';
+    document.getElementById('precoForm').style.display='none';
+    document.getElementById('pMin').textContent='R$ '+(p.precoMinimo||0).toLocaleString('pt-BR');
+    document.getElementById('pIdeal').textContent='R$ '+(p.precoIdeal||0).toLocaleString('pt-BR');
+    document.getElementById('pMax').textContent='R$ '+(p.precoMaximo||0).toLocaleString('pt-BR');
+    document.getElementById('pAvulsa').textContent='R$ '+(p.precoSessaoAvulsa||0).toLocaleString('pt-BR')+'/sessão';
+    document.getElementById('pRac').textContent=p.raciocinio||'';
+    document.getElementById('pEstr').textContent=p.estrategia||'';
+    document.getElementById('pArg').textContent='"'+(p.argumentoDeValor||'')+'"';
+    var errosBox=document.getElementById('errosBox'),errosList=document.getElementById('errosList');
+    if(p.errosComuns&&p.errosComuns.length){
+      errosList.innerHTML=p.errosComuns.map(function(e){return '<div style="display:flex;gap:8px;margin-bottom:6px"><span style="color:#E57373;flex-shrink:0">✗</span><div style="font-size:12px;color:rgba(229,115,115,.8);line-height:1.55">'+esc(e)+'</div></div>';}).join('');
+      errosBox.style.display='block';
+    }else errosBox.style.display='none';
+    document.getElementById('precoRes').style.display='block';
+    precoData=p;
+  }catch(e){
+    clearInterval(loadInt2);
+    document.getElementById('loadPreco').style.display='none';
+    document.getElementById('precoBtns').style.display='flex';
+    showErr('erroPreco',tratarErro(e));
+  }
+}
+
+function copiarTexto(){
+  if(!resultado)return;
+  navigator.clipboard.writeText(resultado.clientPresentationText||'').then(function(){
+    var b=document.getElementById('btnCopiar');b.textContent='✓ Copiado!';setTimeout(function(){b.textContent='📋 Copiar texto';},2200);
+  });
+}
+
+function salvar(){
+  if(!resultado)return;
+  var nome=document.getElementById('fCliente').value.trim()||document.getElementById('fQueixa').value.trim()||'Sem nome';
+  var novo={id:Date.now(),clienteName:nome,processTitle:resultado.processTitle,sessoes:fmt,tecnicas:tags.join(', '),data:new Date().toLocaleDateString('pt-BR'),resultado:resultado,preco:precoData,terapeuta:document.getElementById('fNome').value.trim(),queixa:document.getElementById('fQueixa').value.trim()};
+  salvos=[novo].concat(salvos).slice(0,50);
+  localStorage.setItem('ptp_salvos',JSON.stringify(salvos));
+  var b=document.getElementById('btnSalvar');b.textContent='✓ Salvo!';b.style.color='#5DD87A';b.style.borderColor='rgba(93,216,122,.4)';
+  setTimeout(function(){b.textContent='💾 Salvar';b.style.color='';b.style.borderColor='';},2200);
+}
+
+function toggleSalvos(){
+  var tela=document.getElementById('telaSalvos');
+  var ativo=tela.style.display==='block';
+  if(ativo){tela.style.display='none';document.getElementById('sec'+step).style.display='block';document.getElementById('tabsEl').style.display='flex';}
+  else{tela.style.display='block';for(var i=0;i<5;i++)document.getElementById('sec'+i).style.display='none';document.getElementById('sec4').style.display='none';document.getElementById('secLoad').style.display='none';document.getElementById('tabsEl').style.display='none';renderSalvos();}
+}
+
+function renderSalvos(){
+  var lista=document.getElementById('listaSalvos');lista.innerHTML='';
+  if(!salvos.length){lista.innerHTML='<div class="card" style="text-align:center;padding:2rem"><div style="font-size:13px;color:var(--br3)">Nenhum processo salvo ainda.</div></div>';return;}
+  salvos.forEach(function(s){
+    var d=document.createElement('div');d.className='salvo-item';
+    d.innerHTML='<div class="salvo-icone">🌿</div><div class="salvo-info"><div class="salvo-nome">'+esc(s.clienteName)+'</div><div class="salvo-proc">'+esc(s.processTitle)+'</div><div class="salvo-data">'+s.sessoes+' sessões · '+s.data+'</div></div>'
+      +'<div style="display:flex;gap:6px;flex-shrink:0"><button class="btnm" style="padding:7px 14px;font-size:11px" onclick="abrirSalvo('+s.id+')">Abrir</button><button style="background:rgba(229,115,115,.15);border:1px solid rgba(229,115,115,.4);border-radius:8px;padding:7px 12px;font-size:11px;color:#EF9A9A;cursor:pointer;font-family:Jost,sans-serif" onclick="excluirSalvo('+s.id+')">✕</button></div>';
+    lista.appendChild(d);
+  });
+  document.getElementById('btnSalvos').textContent='📂 '+(salvos.length>0?salvos.length+' salvos':'Salvos');
+}
+
+function abrirSalvo(id){
+  var s=salvos.find(function(x){return x.id===id;});if(!s)return;
+  resultado=s.resultado;precoData=s.preco||null;fmt=s.sessoes;
+  tags=s.tecnicas.split(', ').filter(Boolean);renderTags();
+  document.getElementById('fNome').value=s.terapeuta||'';
+  document.getElementById('fQueixa').value=s.queixa||'';
+  document.getElementById('fCliente').value=s.clienteName||'';
+  document.getElementById('telaSalvos').style.display='none';
+  document.getElementById('tabsEl').style.display='flex';
+  document.getElementById('sec4').style.display='none';
+  renderResultado(resultado);
+}
+
+function excluirSalvo(id){salvos=salvos.filter(function(s){return s.id!==id;});localStorage.setItem('ptp_salvos',JSON.stringify(salvos));renderSalvos();}
+
+function reiniciar(){
+  resultado=null;precoData=null;tags=[];renderTags();
+  ['fNome','fAbordagem','fPublico','fQueixa','fObjetivo','fPerfil','fExtras','fCliente'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  document.querySelectorAll('.preset').forEach(function(b){b.style.display='';});
+  document.querySelectorAll('.fmt').forEach(function(c,i){c.classList.toggle('sel',i===0);});
+  fmt=5;document.getElementById('sec4').style.display='none';
+  document.getElementById('btnGerar').disabled=false;
+  hideErr('erroBox');
+  document.getElementById('tabsEl').style.display='flex';
+  // Se já usou a geração gratuita, mostra paywall
+  if(!podeGerar()){mostrarPaywall();}else{ir(0);}
+}
+</script>
+</body>
+</html>
